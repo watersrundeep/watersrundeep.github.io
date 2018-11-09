@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>MySpark | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="RDWaters's Blog">
+  
+  <meta name="description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySpark">
+<meta property="og:url" content="http://yoursite.com/2018/11/05/MySpark/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/基于单词统计wordcount程序剖析rdd的五大属性.png">
+<meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/基于单词统计wordcount程序剖析rdd的五大属性.png">
+<meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/spark任务调度.png">
+<meta property="og:updated_time" content="2018-11-09T07:36:13.762Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySpark">
+<meta name="twitter:description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
+<meta name="twitter:image" content="d:/yhhBlog/source/_posts/MySpark/基于单词统计wordcount程序剖析rdd的五大属性.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">RDWaters&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/timg.jpg" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        RDWaters&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        RDWaters&#39;s 的乐园 ~
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="RDWaters" target="_blank" href="//">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="[layout]-MySpark" class="article article-type-[layout]" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      MySpark
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2018-11-05
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <table>
+<thead>
+<tr>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">作用</th>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Ctrl+1</td>
+<td style="text-align:center">一阶标题</td>
+<td style="text-align:center">Ctrl+B</td>
+<td style="text-align:center">字体加粗</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+2</td>
+<td style="text-align:center">二阶标题</td>
+<td style="text-align:center">Ctrl+I</td>
+<td style="text-align:center">字体倾斜</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+3</td>
+<td style="text-align:center">三阶标题</td>
+<td style="text-align:center">Ctrl+U</td>
+<td style="text-align:center">下划线</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+4</td>
+<td style="text-align:center">四阶标题</td>
+<td style="text-align:center">Ctrl+HOME</td>
+<td style="text-align:center">返回Typora顶部</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+5</td>
+<td style="text-align:center">五阶标题</td>
+<td style="text-align:center">Ctrl+END</td>
+<td style="text-align:center">返回Typora底部</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+6</td>
+<td style="text-align:center">六阶标题</td>
+<td style="text-align:center">Ctrl+T</td>
+<td style="text-align:center">创建表格</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+L</td>
+<td style="text-align:center">选中某句话</td>
+<td style="text-align:center">Ctrl+K</td>
+<td style="text-align:center">创建超链接</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+D</td>
+<td style="text-align:center">选中某个单词</td>
+<td style="text-align:center">Ctrl+F</td>
+<td style="text-align:center">搜索</td>
+</tr>
+<tr>
+<td style="text-align:center">Ctrl+E</td>
+<td style="text-align:center">选中相同格式的文字</td>
+<td style="text-align:center">Ctrl+H</td>
+<td style="text-align:center">搜索并替换</td>
+</tr>
+<tr>
+<td style="text-align:center">Alt+Shift+5</td>
+<td style="text-align:center">删除线</td>
+<td style="text-align:center">Ctrl+Shift+I</td>
+<td style="text-align:center">插入图片</td>
+</tr>
+</tbody>
+</table>
+<h3 id="一、spark是什么？"><a href="#一、spark是什么？" class="headerlink" title="一、spark是什么？"></a>一、spark是什么？</h3><ul>
+<li>spark是一个针对于大规模数据处理的统一分析引擎。（官网原话）</li>
+<li>spark是一个基于内存计算的大数据处理框架，处理速度非常的快。但是这里仅仅是对数据的计算，没有涉及到对数据的存储，要对数据进行处理就要和外部的数据源进行对接。比如处理hdfs上面的数据。</li>
+</ul>
+<h3 id="二、spark的四大特性"><a href="#二、spark的四大特性" class="headerlink" title="二、spark的四大特性"></a>二、spark的四大特性</h3><ul>
+<li>1 速度快<ul>
+<li>spark比mapreduce在内存中快100倍，在磁盘中快10倍。<ul>
+<li>主要原因一：mapreduce处理任务的时候，job的输出结果只能保存在磁盘中，后续的job任务要依赖前面的job，所以要进行大量的io操作才能进行后续的job任务。而spark处理任务的时候，job的输出结果可以保存在内存当中，后续的job可以直接从内存中获取，从而大大减少了磁盘的io操作。</li>
+<li>主要原因二：mapreduce处理任务是以进程的方式运行在yarn集群中，比如100个MapTask就需要100个进程。而spark处理任务是以线程的方式在进程中运行的，比如100个MapTask只需要一个进程去开启100个线程就可以。大大节省了时间和资源。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2 易用性<ul>
+<li>可以快速写一个spark应用程序，通过java、python、scala、R、sql等语言来进行代码开发</li>
+</ul>
+</li>
+<li>3 通用性<ul>
+<li>spark框架本身就是一个生态圈，可以通过它的一些子项目SparkSql    SparkStreaming    Mlib    GraphX 来使用到不同的应用场景</li>
+</ul>
+</li>
+<li>4 兼容性<ul>
+<li>spark程序就是一个可以计算任务的程序，哪里    可以给当前这个任务提供计算的资源，我们就把这个spark程序提交到哪里去运行<ul>
+<li>standalone<ul>
+<li>它是spark集群自带的集群模式，整个任务的资源分配由Master负责</li>
+</ul>
+</li>
+<li>yarn<ul>
+<li>可以把spark程序提交到yarn中午运行，整个任务资源分配由ResourceManager负责</li>
+</ul>
+</li>
+<li>mesos<ul>
+<li>它是一个apache类似于yarn的资源调度框架</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、spark角色介绍"><a href="#三、spark角色介绍" class="headerlink" title="三、spark角色介绍"></a>三、spark角色介绍</h3><ul>
+<li>1 Driver<ul>
+<li>它会运行客户端写好的main方法，并且会创建sparkContext对象，该对象是所有spark程序执行的入口</li>
+</ul>
+</li>
+<li>2 Application<ul>
+<li>它就是一个计算任务的应用程序，它包含了Driver端代码以及整个任务在运行的时候需要的资源信息</li>
+</ul>
+</li>
+<li>3 Cluster Manager<ul>
+<li>它就是一个可以获得外部资源的服务<ul>
+<li>standalone<ul>
+<li>它是spark集群自带的集群模式，整个任务的资源分配由Master负责</li>
+</ul>
+</li>
+<li>yarn <ul>
+<li>spark 程序可以提交到yarn去运行，整个任务的资源分配由ResourceManager负责</li>
+</ul>
+</li>
+<li>mesos<ul>
+<li>它是一个apache类型于yarn的任务调度框架</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>4 Master<ul>
+<li>它就是整个spark集群的老大，他负责任务资源的分配</li>
+</ul>
+</li>
+<li>5 worker<ul>
+<li>它就是整个spark集群的小群，他负责任务的真正计算</li>
+</ul>
+</li>
+<li>6 Executor<ul>
+<li>它就是一个进程，它会在worker节点来启动进程来运行任务</li>
+</ul>
+</li>
+<li>7 Task<ul>
+<li>他就是一个线程，它会以线程的方式运行在worker节点的executor进程中</li>
+</ul>
+</li>
+</ul>
+<h3 id="四、RDD概述-bookmark-tabs"><a href="#四、RDD概述-bookmark-tabs" class="headerlink" title="四、RDD概述:bookmark_tabs:"></a>四、RDD概述:bookmark_tabs:</h3><h4 id="2-1-RDD是什么？"><a href="#2-1-RDD是什么？" class="headerlink" title="2.1 RDD是什么？"></a>2.1 RDD是什么？</h4><ul>
+<li>RDD（Resilient Distributed Dataset）叫做弹性分布式数据集，是spark中最基本的数据抽象，他代表一个不可变、可分区、里面的元素可并行计算的集合</li>
+<li>Dataset  它就是一个集合，集合里面可以存放很多个元素</li>
+<li>Distributed  它的数据时分布式存储的，方便后期的分布式计算</li>
+<li>Resilient  弹性  他代表的含义：rdd的数据可以保存在内存或者磁盘中</li>
+</ul>
+<h4 id="2-2-RDD的五大特性"><a href="#2-2-RDD的五大特性" class="headerlink" title="2.2 RDD的五大特性"></a>2.2 RDD的五大特性</h4><p><img src="D:\yhhBlog\source\_posts\MySpark\基于单词统计wordcount程序剖析rdd的五大属性.png" alt=""></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) <span class="type">A</span> list of partitions</span><br><span class="line">	一个分区列表，也就是说一个rdd有多个分区，分区里面才是真正的数据，spark任务的执行是以分区为单位的，一个分区就对应后期的一个task</span><br><span class="line">	读取hdfs上的数据文件产生的<span class="type">RDD</span>分区数跟block块的个数相等</span><br><span class="line">	如果一个文件只有一个block块，它会产生的分区数为<span class="number">2</span>（默认为<span class="number">2</span>）</span><br><span class="line">(<span class="number">2</span>) <span class="type">A</span> function <span class="keyword">for</span> computing each split</span><br><span class="line">	作用在每一个分区中的函数</span><br><span class="line">	<span class="keyword">val</span> rdd2 = rdd1.map(x=&gt;(x,<span class="number">1</span>))</span><br><span class="line">(<span class="number">3</span>) <span class="type">A</span> list of dependencies on other <span class="type">RDDs</span></span><br><span class="line">	一个rdd会依赖其他多个rdd，这里就涉及到了rdd与rdd之间的依赖关系，后期spark的容错机制就是根据这个特性而来的</span><br><span class="line">(<span class="number">4</span>) <span class="type">Optionally</span>,a <span class="type">Partitioner</span> <span class="keyword">for</span> key-value <span class="type">RDDs</span> </span><br><span class="line">	对于kv类型的rdd才会有分区函数（必须要产生shuffle），不是kv类型的rdd的分区函数为<span class="type">None</span>。分区函数的作用：决定了数据流入到哪里</span><br><span class="line">(<span class="number">5</span>) <span class="type">Optionally</span>,a list of preferred locations to compute each split on</span><br><span class="line">	一组最优的块的位置列表，表示数据的本地性和数据位置最优</span><br><span class="line">	spark在进行任务分配的时候，会优先考虑有数据的节点去进行计算，避免产生大量的网路请求</span><br></pre></td></tr></table></figure>
+<h3 id="五、RDD的算子分类"><a href="#五、RDD的算子分类" class="headerlink" title="五、RDD的算子分类"></a>五、RDD的算子分类</h3><ul>
+<li>1 transformation（转换）<ul>
+<li>可以把一个rdd转换生成一个新的rdd，它是延迟加载，不会立即触发整个任务的运行</li>
+<li>它会记录下rdd上面的转换操作行为</li>
+<li>比如<ul>
+<li>map  flatMap reduceByKey sortBy</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2 action（动作）<ul>
+<li>它会触发任务真正的运行</li>
+<li>比如 collect saveAsTextFile</li>
+</ul>
+</li>
+</ul>
+<h3 id="六、RDD的依赖关系"><a href="#六、RDD的依赖关系" class="headerlink" title="六、RDD的依赖关系"></a>六、RDD的依赖关系</h3><ul>
+<li>1 窄依赖<ul>
+<li>窄依赖指的是一个父RDD的partition最多被子RDD的一个partition使用</li>
+<li>总结：窄依赖我们形象的必做独生子女</li>
+<li>比如：flatMap map filter</li>
+<li>窄依赖不会产生shuffle</li>
+</ul>
+</li>
+<li>2 宽依赖<ul>
+<li>宽依赖指的是多个子RDD的partition会依赖同一个父RDD的partition</li>
+<li>宽依赖形象的比喻为超生</li>
+<li>比如：reduceByKey  groupByKey  sortBy  join</li>
+<li>宽依赖会产生shuffle</li>
+</ul>
+</li>
+</ul>
+<h3 id="七、血统"><a href="#七、血统" class="headerlink" title="七、血统"></a>七、血统</h3><ul>
+<li>血统：它会记录在rdd上的一系列操作行为，后期某个rdd分区的数据丢失之后，可以通过血统这层关系重新计算恢复得到</li>
+</ul>
+<h3 id="八、RDD的缓存机制"><a href="#八、RDD的缓存机制" class="headerlink" title="八、RDD的缓存机制"></a>八、RDD的缓存机制</h3><h4 id="8-1-什么是RDD的缓存机制"><a href="#8-1-什么是RDD的缓存机制" class="headerlink" title="8.1 什么是RDD的缓存机制"></a>8.1 什么是RDD的缓存机制</h4><ul>
+<li>可以把一个RDD的结果数据进行缓存，后续在其他的job需要依赖前面的rdd结果数据时，可以直接从缓存中获取结果数据，避免重新计算</li>
+</ul>
+<h4 id="8-2-如何设置缓存"><a href="#8-2-如何设置缓存" class="headerlink" title="8.2 如何设置缓存"></a>8.2 如何设置缓存</h4><ul>
+<li>对rdd设置缓存有两种方式：一种是cache，一种是persist</li>
+<li>:kissing_closed_eyes:cache:默认是把缓存放在内存中，其本质调用的persist方法，默认带的缓存级别就是MEMORY_ONLY</li>
+<li>:upside_down_face:persist中有丰富的缓存级别，可以把数据缓存到磁盘中，这些缓存级别都被定义在StorageLevel Object中</li>
+<li>这两种缓存方法并不是立即调用就会触发，而是需要在后面操作中有一个action操作</li>
+</ul>
+<h4 id="8-3-清除缓存"><a href="#8-3-清除缓存" class="headerlink" title="8.3 清除缓存"></a>8.3 清除缓存</h4><p>:face_with_thermometer:rdd.unpersisit 方法可以把缓存中的数据</p>
+<h4 id="8-4-什么时候去设置缓存"><a href="#8-4-什么时候去设置缓存" class="headerlink" title="8.4 什么时候去设置缓存"></a>8.4 什么时候去设置缓存</h4><ul>
+<li>1 一个rdd后期多次使用</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd2 = rdd1.map(_.split(<span class="string">" "</span>))</span><br><span class="line"><span class="keyword">val</span> rdd3 = rdd1.flatMap(_.split(<span class="string">" "</span>))</span><br><span class="line">rdd1被使用了很多次，后面就可以对rdd1设置缓存，后面的job就可以从缓存中直接获取，避免重新计算</span><br></pre></td></tr></table></figure>
+<ul>
+<li>2 一个rdd的结果获取得到来之不易</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd1 = sc.textFile(<span class="string">"/words.txt"</span>).xxx.xxx.xxx.xxx.xxx.xxx.xxx.xxx</span><br><span class="line">rdd1经过大量的转换操作或者计算逻辑比较复杂最后得到不容易，这个时候就可以对rdd1设置缓存</span><br></pre></td></tr></table></figure>
+<h3 id="九、DAG有向无环图和划分stage"><a href="#九、DAG有向无环图和划分stage" class="headerlink" title="九、DAG有向无环图和划分stage"></a>九、DAG有向无环图和划分stage</h3><ul>
+<li>DAG有向无环图<ul>
+<li>DAG就是按照rdd一系列操作转换最后形成的一个有方向无闭环的图，这里的方向就是rdd的操作顺序，后期我们可以根据这个有向无环图进行stage划分，这里的stage我们称为不通的调度阶段。</li>
+</ul>
+</li>
+</ul>
+<p><img src="D:\yhhBlog\source\_posts\MySpark\基于单词统计wordcount程序剖析rdd的五大属性.png" alt=""></p>
+<h3 id="十、spark任务调度流程"><a href="#十、spark任务调度流程" class="headerlink" title="十、spark任务调度流程"></a>十、spark任务调度流程</h3><p><img src="D:\yhhBlog\source\_posts\MySpark\spark任务调度.png" alt=""></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span>) <span class="type">Driver</span>端会运行客户端main方法中的代码，代码就会构建sparkContext对象，同时会创建出<span class="type">DAGScheduler</span>和<span class="type">TaskScheduler</span>，然后按照rdd的一系列操作生成<span class="type">DAG</span>有向无环图。最后把<span class="type">DAG</span>有向无环图提交给<span class="type">DAGScheduler</span></span><br><span class="line">(<span class="number">2</span>) <span class="type">DAGScheduler</span>拿到<span class="type">DAG</span>有向无环图后，按照宽依赖进行stage的划分，这时候会产生很多个stage,每一个stage中都有很多可以并行运行的task,把每一个stage中的task封装到一个taskSet集合中，最后提交给<span class="type">TaskScheduler</span></span><br><span class="line">(<span class="number">3</span>) <span class="type">TaskScheduler</span>拿到taskSet集合后，依次遍历每一个task，最后提交给worker节点的executor进程中。task就以线程的模式运行在worker节点的executor进程中。</span><br></pre></td></tr></table></figure>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2018年11月09日 15:36</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/05/MySpark/" title="MySpark">http://yoursite.com/2018/11/05/MySpark/</a></p>
+        <footer>
+            <a href="http://yoursite.com">
+                <img src="/images/timg.jpg" alt="John Doe">
+                John Doe
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/11/05/MySpark/&title=《MySpark》 — Hexo&pic=http://yoursite.comimages/timg.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/11/05/MySpark/&title=《MySpark》 — Hexo&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/11/05/MySpark/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySpark》 — Hexo&url=http://yoursite.com/2018/11/05/MySpark/&via=http://yoursite.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/11/05/MySpark/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/11/05/MySpark/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一、spark是什么？"><span class="post-toc-text">一、spark是什么？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二、spark的四大特性"><span class="post-toc-text">二、spark的四大特性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三、spark角色介绍"><span class="post-toc-text">三、spark角色介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四、RDD概述-bookmark-tabs"><span class="post-toc-text">四、RDD概述:bookmark_tabs:</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-RDD是什么？"><span class="post-toc-text">2.1 RDD是什么？</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-RDD的五大特性"><span class="post-toc-text">2.2 RDD的五大特性</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#五、RDD的算子分类"><span class="post-toc-text">五、RDD的算子分类</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#六、RDD的依赖关系"><span class="post-toc-text">六、RDD的依赖关系</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#七、血统"><span class="post-toc-text">七、血统</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#八、RDD的缓存机制"><span class="post-toc-text">八、RDD的缓存机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#8-1-什么是RDD的缓存机制"><span class="post-toc-text">8.1 什么是RDD的缓存机制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#8-2-如何设置缓存"><span class="post-toc-text">8.2 如何设置缓存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#8-3-清除缓存"><span class="post-toc-text">8.3 清除缓存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#8-4-什么时候去设置缓存"><span class="post-toc-text">8.4 什么时候去设置缓存</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#九、DAG有向无环图和划分stage"><span class="post-toc-text">九、DAG有向无环图和划分stage</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#十、spark任务调度流程"><span class="post-toc-text">十、spark任务调度流程</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2018/11/05/MySpark/MySpark/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">MySpark</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2018 John Doe<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://yoursite.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
