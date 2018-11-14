@@ -11,14 +11,14 @@
   <meta name="description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySpark">
-<meta property="og:url" content="http://yoursite.com/2018/11/05/MySpark/MySpark/index.html">
+<meta property="og:url" content="http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/基于单词统计wordcount程序剖析rdd的五大属性.png">
 <meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/基于单词统计wordcount程序剖析rdd的五大属性.png">
 <meta property="og:image" content="d:/yhhBlog/source/_posts/MySpark/spark任务调度.png">
-<meta property="og:updated_time" content="2018-11-09T09:00:58.758Z">
+<meta property="og:updated_time" content="2018-11-14T00:29:30.491Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySpark">
 <meta name="twitter:description" content="快捷键 作用 快捷键 作用     Ctrl+1 一阶标题 Ctrl+B 字体加粗   Ctrl+2 二阶标题 Ctrl+I 字体倾斜   Ctrl+3 三阶标题 Ctrl+U 下划线   Ctrl+4 四阶标题 Ctrl+HOME 返回Typora顶部   Ctrl+5 五阶标题 Ctrl+END 返回Typora底部   Ctrl+6 六阶标题 Ctrl+T 创建表格   Ctrl+L">
@@ -113,7 +113,7 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="[layout]-MySpark/MySpark" class="article article-type-[layout]" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="[layout]-MySpark（一）/MySpark（一）" class="article article-type-[layout]" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -274,7 +274,7 @@
 </ul>
 </li>
 <li>mesos<ul>
-<li>它是一个apache类型于yarn的任务调度框架</li>
+<li>它是一个apache类似于yarn的任务调度框架</li>
 </ul>
 </li>
 </ul>
@@ -301,7 +301,7 @@
 <h3 id="四、RDD概述-bookmark-tabs"><a href="#四、RDD概述-bookmark-tabs" class="headerlink" title="四、RDD概述:bookmark_tabs:"></a>四、RDD概述:bookmark_tabs:</h3><h4 id="2-1-RDD是什么？"><a href="#2-1-RDD是什么？" class="headerlink" title="2.1 RDD是什么？"></a>2.1 RDD是什么？</h4><ul>
 <li>RDD（Resilient Distributed Dataset）叫做弹性分布式数据集，是spark中最基本的数据抽象，他代表一个不可变、可分区、里面的元素可并行计算的集合</li>
 <li>Dataset  它就是一个集合，集合里面可以存放很多个元素</li>
-<li>Distributed  它的数据时分布式存储的，方便后期的分布式计算</li>
+<li>Distributed  它的数据是分布式存储的，方便后期的分布式计算</li>
 <li>Resilient  弹性  他代表的含义：rdd的数据可以保存在内存或者磁盘中</li>
 </ul>
 <h4 id="2-2-RDD的五大特性"><a href="#2-2-RDD的五大特性" class="headerlink" title="2.2 RDD的五大特性"></a>2.2 RDD的五大特性</h4><p><img src="D:\yhhBlog\source\_posts\MySpark\基于单词统计wordcount程序剖析rdd的五大属性.png" alt=""></p>
@@ -361,7 +361,7 @@
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd1 = sc.textFile(<span class="string">"/words.txt"</span>).xxx.xxx.xxx.xxx.xxx.xxx.xxx.xxx</span><br><span class="line">rdd1经过大量的转换操作或者计算逻辑比较复杂最后得到不容易，这个时候就可以对rdd1设置缓存</span><br></pre></td></tr></table></figure>
 <h3 id="九、DAG有向无环图和划分stage"><a href="#九、DAG有向无环图和划分stage" class="headerlink" title="九、DAG有向无环图和划分stage"></a>九、DAG有向无环图和划分stage</h3><ul>
 <li>DAG有向无环图<ul>
-<li>DAG就是按照rdd一系列操作转换最后形成的一个有方向无闭环的图，这里的方向就是rdd的操作顺序，后期我们可以根据这个有向无环图进行stage划分，这里的stage我们称为不通的调度阶段。</li>
+<li>DAG就是按照rdd一系列操作转换最后形成的一个有方向无闭环的图，这里的方向就是rdd的操作顺序，后期我们可以根据这个有向无环图进行stage划分，这里的stage我们称为不同的调度阶段。</li>
 </ul>
 </li>
 </ul>
@@ -393,8 +393,8 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年11月09日 17:00</p>
-        <p>原始链接： <a class="post-url" href="/2018/11/05/MySpark/MySpark/" title="MySpark">http://yoursite.com/2018/11/05/MySpark/MySpark/</a></p>
+        <p>最后更新： 2018年11月14日 08:29</p>
+        <p>原始链接： <a class="post-url" href="/2018/11/05/MySpark（一）/MySpark（一）/" title="MySpark">http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/</a></p>
         <footer>
             <a href="http://yoursite.com">
                 <img src="/images/timg.jpg" alt="John Doe">
@@ -451,7 +451,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/11/05/MySpark/MySpark/&title=《MySpark》 — Hexo&pic=http://yoursite.comimages/timg.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/&title=《MySpark》 — Hexo&pic=http://yoursite.comimages/timg.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -461,22 +461,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/11/05/MySpark/MySpark/&title=《MySpark》 — Hexo&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/&title=《MySpark》 — Hexo&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/11/05/MySpark/MySpark/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySpark》 — Hexo&url=http://yoursite.com/2018/11/05/MySpark/MySpark/&via=http://yoursite.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySpark》 — Hexo&url=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/&via=http://yoursite.com" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/11/05/MySpark/MySpark/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -486,7 +486,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/11/05/MySpark/MySpark/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/11/05/MySpark（一）/MySpark（一）/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -511,11 +511,16 @@
 
 <nav id="article-nav">
   
-  
-    <a href="/2018/11/02/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Hello World</span>
-      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    <a href="/2018/11/10/MySpark（二）/MySpark（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          MySpark（二）
+        
+      </span>
     </a>
+  
   
 </nav>
 
